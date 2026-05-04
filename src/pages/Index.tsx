@@ -1,10 +1,45 @@
+import { useMemo, useState } from "react";
 import heroSushi from "@/assets/hero-sushi.jpg";
 import mangoRoll from "@/assets/mango-roll.jpg";
 import misoSoup from "@/assets/miso-soup.jpg";
 import bento from "@/assets/bento.jpg";
 import hibachi from "@/assets/hibachi.jpg";
 import { Button } from "@/components/ui/button";
-import { MapPin, Phone, Clock, Star, Utensils, ShoppingBag, Truck } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MapPin, Phone, Clock, Star, Utensils, ShoppingBag, Truck, Search, AlertTriangle, Leaf, Flame, X } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+
+// Tag system
+// Diet tags: vegan, vegetarian, gf (gluten-free option), spicy
+// Allergen tags: gluten, soy, shellfish, fish, egg, dairy, sesame, nuts
+type DietTag = "vegan" | "vegetarian" | "gf" | "spicy";
+type AllergenTag = "gluten" | "soy" | "shellfish" | "fish" | "egg" | "dairy" | "sesame" | "nuts";
+
+interface MenuItem {
+  name: string;
+  price: string;
+  desc: string;
+  diet?: DietTag[];
+  allergens?: AllergenTag[];
+}
+
+const ALLERGEN_LABEL: Record<AllergenTag, string> = {
+  gluten: "Gluten / Wheat",
+  soy: "Soy",
+  shellfish: "Shellfish",
+  fish: "Fish",
+  egg: "Egg",
+  dairy: "Dairy",
+  sesame: "Sesame",
+  nuts: "Tree Nuts",
+};
+
+const DIET_LABEL: Record<DietTag, string> = {
+  vegan: "Vegan",
+  vegetarian: "Vegetarian",
+  gf: "Gluten-Free Option",
+  spicy: "Spicy",
+};
 
 const favorites = [
   { name: "Dragon Roll", desc: "Eel, avocado and cucumber finished with sweet eel sauce.", price: "$13.99", img: mangoRoll, tag: "🐉 Signature" },
@@ -15,138 +50,138 @@ const favorites = [
   { name: "Shrimp Tempura", desc: "Lightly battered shrimp fried to a golden crunch.", price: "$7.99", img: misoSoup, tag: "⭐ Popular" },
 ];
 
-const fullMenu: { category: string; jp: string; items: { name: string; price: string; desc: string }[] }[] = [
+const fullMenu: { category: string; jp: string; items: MenuItem[] }[] = [
   {
     category: "Starters & Appetizers",
     jp: "前菜",
     items: [
-      { name: "Edamame", price: "$4.50", desc: "Steamed young soybeans, lightly salted." },
-      { name: "Gyoza", price: "$6.50", desc: "Pan-fried pork dumplings with dipping sauce." },
-      { name: "Shrimp Tempura", price: "$7.99", desc: "Lightly battered fried shrimp with tempura sauce." },
-      { name: "Vegetable Tempura", price: "$6.50", desc: "Fried mixed seasonal vegetables." },
-      { name: "Calamari", price: "$7.50", desc: "Crispy fried squid with dipping sauce." },
-      { name: "Spring Rolls", price: "$4.99", desc: "Crispy vegetable rolls with sweet chili sauce." },
-      { name: "Kani Salad", price: "$6.99", desc: "Crab stick salad with cucumber and mayo dressing." },
-      { name: "Spicy Kani Salad", price: "$7.50", desc: "Spicy version of our kani salad." },
+      { name: "Edamame", price: "$4.50", desc: "Steamed young soybeans, lightly salted.", diet: ["vegan", "gf"], allergens: ["soy"] },
+      { name: "Gyoza", price: "$6.50", desc: "Pan-fried pork dumplings with dipping sauce.", allergens: ["gluten", "soy"] },
+      { name: "Shrimp Tempura", price: "$7.99", desc: "Lightly battered fried shrimp with tempura sauce.", allergens: ["gluten", "shellfish", "egg", "soy"] },
+      { name: "Vegetable Tempura", price: "$6.50", desc: "Fried mixed seasonal vegetables.", diet: ["vegetarian"], allergens: ["gluten", "egg", "soy"] },
+      { name: "Calamari", price: "$7.50", desc: "Crispy fried squid with dipping sauce.", allergens: ["gluten", "shellfish", "egg"] },
+      { name: "Spring Rolls", price: "$4.99", desc: "Crispy vegetable rolls with sweet chili sauce.", diet: ["vegan"], allergens: ["gluten", "soy"] },
+      { name: "Kani Salad", price: "$6.99", desc: "Crab stick salad with cucumber and mayo dressing.", allergens: ["shellfish", "egg", "gluten"] },
+      { name: "Spicy Kani Salad", price: "$7.50", desc: "Spicy version of our kani salad.", diet: ["spicy"], allergens: ["shellfish", "egg", "gluten"] },
     ],
   },
   {
     category: "Soups & Salads",
     jp: "汁・サラダ",
     items: [
-      { name: "Miso Soup", price: "$3.50", desc: "Traditional soybean broth with tofu and seaweed." },
-      { name: "Clear Soup", price: "$3.50", desc: "Light broth with mushrooms and vegetables." },
-      { name: "House Salad", price: "$3.99", desc: "Lettuce, cucumber and tomato with ginger dressing." },
-      { name: "Avocado Salad", price: "$5.99", desc: "Fresh avocado over greens with ginger dressing." },
-      { name: "Seaweed Salad", price: "$5.99", desc: "Marinated seaweed with sesame flavor." },
+      { name: "Miso Soup", price: "$3.50", desc: "Traditional soybean broth with tofu and seaweed.", diet: ["vegetarian", "gf"], allergens: ["soy", "fish"] },
+      { name: "Clear Soup", price: "$3.50", desc: "Light broth with mushrooms and vegetables.", diet: ["gf"] },
+      { name: "House Salad", price: "$3.99", desc: "Lettuce, cucumber and tomato with ginger dressing.", diet: ["vegan", "gf"], allergens: ["soy"] },
+      { name: "Avocado Salad", price: "$5.99", desc: "Fresh avocado over greens with ginger dressing.", diet: ["vegan", "gf"], allergens: ["soy"] },
+      { name: "Seaweed Salad", price: "$5.99", desc: "Marinated seaweed with sesame flavor.", diet: ["vegan"], allergens: ["soy", "sesame"] },
     ],
   },
   {
     category: "Popular Sushi Rolls",
     jp: "人気の巻き",
     items: [
-      { name: "Dragon Roll", price: "$13.99", desc: "Eel, avocado, cucumber and eel sauce." },
-      { name: "Rainbow Roll", price: "$12.99", desc: "Assorted fresh fish over a California roll." },
-      { name: "Spicy Tuna Roll", price: "$7.99", desc: "Tuna tossed in spicy mayo." },
-      { name: "California Roll", price: "$6.99", desc: "Crab, avocado and cucumber." },
-      { name: "Philadelphia Roll", price: "$8.99", desc: "Salmon, cream cheese and cucumber." },
+      { name: "Dragon Roll", price: "$13.99", desc: "Eel, avocado, cucumber and eel sauce.", allergens: ["fish", "soy", "gluten"] },
+      { name: "Rainbow Roll", price: "$12.99", desc: "Assorted fresh fish over a California roll.", allergens: ["fish", "shellfish", "soy", "egg"] },
+      { name: "Spicy Tuna Roll", price: "$7.99", desc: "Tuna tossed in spicy mayo.", diet: ["spicy"], allergens: ["fish", "egg", "soy", "gluten"] },
+      { name: "California Roll", price: "$6.99", desc: "Crab, avocado and cucumber.", allergens: ["shellfish", "egg"] },
+      { name: "Philadelphia Roll", price: "$8.99", desc: "Salmon, cream cheese and cucumber.", allergens: ["fish", "dairy"] },
     ],
   },
   {
     category: "Specialty Rolls",
     jp: "特製巻き",
     items: [
-      { name: "Caterpillar Roll", price: "$12.99", desc: "Eel and avocado topped roll." },
-      { name: "Volcano Roll", price: "$11.99", desc: "Baked seafood topping over a California roll." },
-      { name: "Shrimp Tempura Roll", price: "$9.99", desc: "Crispy shrimp with sauce inside." },
-      { name: "Spider Roll", price: "$11.50", desc: "Soft shell crab with avocado and cucumber." },
-      { name: "Crunchy Roll", price: "$8.99", desc: "Tempura flakes with spicy mayo." },
+      { name: "Caterpillar Roll", price: "$12.99", desc: "Eel and avocado topped roll.", allergens: ["fish", "soy", "gluten"] },
+      { name: "Volcano Roll", price: "$11.99", desc: "Baked seafood topping over a California roll.", diet: ["spicy"], allergens: ["shellfish", "fish", "egg", "dairy"] },
+      { name: "Shrimp Tempura Roll", price: "$9.99", desc: "Crispy shrimp with sauce inside.", allergens: ["shellfish", "gluten", "egg", "soy"] },
+      { name: "Spider Roll", price: "$11.50", desc: "Soft shell crab with avocado and cucumber.", allergens: ["shellfish", "gluten", "egg"] },
+      { name: "Crunchy Roll", price: "$8.99", desc: "Tempura flakes with spicy mayo.", diet: ["spicy"], allergens: ["gluten", "egg", "soy"] },
     ],
   },
   {
     category: "Vegetable Rolls",
     jp: "野菜巻き",
     items: [
-      { name: "Avocado Roll", price: "$4.50", desc: "Fresh avocado wrapped in nori and rice." },
-      { name: "Cucumber Roll", price: "$4.00", desc: "Crisp cucumber with sushi rice." },
-      { name: "Asparagus Roll", price: "$4.50", desc: "Tender asparagus rolled simply." },
-      { name: "Sweet Potato Roll", price: "$5.50", desc: "Tempura sweet potato with eel sauce." },
+      { name: "Avocado Roll", price: "$4.50", desc: "Fresh avocado wrapped in nori and rice.", diet: ["vegan", "gf"] },
+      { name: "Cucumber Roll", price: "$4.00", desc: "Crisp cucumber with sushi rice.", diet: ["vegan", "gf"] },
+      { name: "Asparagus Roll", price: "$4.50", desc: "Tender asparagus rolled simply.", diet: ["vegan", "gf"] },
+      { name: "Sweet Potato Roll", price: "$5.50", desc: "Tempura sweet potato with eel sauce.", diet: ["vegetarian"], allergens: ["gluten", "soy", "egg"] },
     ],
   },
   {
     category: "Sushi & Sashimi À La Carte",
     jp: "寿司・刺身",
     items: [
-      { name: "Tuna (Maguro)", price: "$5.50", desc: "Served as sushi over rice or sashimi slices." },
-      { name: "Salmon (Sake)", price: "$5.50", desc: "Served as sushi over rice or sashimi slices." },
-      { name: "Yellowtail (Hamachi)", price: "$6.00", desc: "Served as sushi over rice or sashimi slices." },
-      { name: "Eel (Unagi)", price: "$6.00", desc: "Grilled freshwater eel with sweet glaze." },
-      { name: "Shrimp (Ebi)", price: "$4.50", desc: "Cooked shrimp, sushi or sashimi style." },
-      { name: "Octopus (Tako)", price: "$5.00", desc: "Tender sliced octopus." },
-      { name: "Crab Stick (Kani)", price: "$4.00", desc: "Sweet crab stick over rice." },
+      { name: "Tuna (Maguro)", price: "$5.50", desc: "Served as sushi over rice or sashimi slices.", diet: ["gf"], allergens: ["fish"] },
+      { name: "Salmon (Sake)", price: "$5.50", desc: "Served as sushi over rice or sashimi slices.", diet: ["gf"], allergens: ["fish"] },
+      { name: "Yellowtail (Hamachi)", price: "$6.00", desc: "Served as sushi over rice or sashimi slices.", diet: ["gf"], allergens: ["fish"] },
+      { name: "Eel (Unagi)", price: "$6.00", desc: "Grilled freshwater eel with sweet glaze.", allergens: ["fish", "soy", "gluten"] },
+      { name: "Shrimp (Ebi)", price: "$4.50", desc: "Cooked shrimp, sushi or sashimi style.", allergens: ["shellfish"] },
+      { name: "Octopus (Tako)", price: "$5.00", desc: "Tender sliced octopus.", allergens: ["shellfish"] },
+      { name: "Crab Stick (Kani)", price: "$4.00", desc: "Sweet crab stick over rice.", allergens: ["shellfish", "egg", "gluten"] },
     ],
   },
   {
     category: "Teriyaki Entrées",
     jp: "照り焼き",
     items: [
-      { name: "Chicken Teriyaki", price: "$11.99", desc: "Grilled chicken with sweet teriyaki glaze." },
-      { name: "Beef Teriyaki", price: "$15.99", desc: "Sliced beef with teriyaki sauce." },
-      { name: "Salmon Teriyaki", price: "$15.99", desc: "Grilled salmon brushed with glaze." },
-      { name: "Shrimp Teriyaki", price: "$14.99", desc: "Plump shrimp with teriyaki sauce." },
+      { name: "Chicken Teriyaki", price: "$11.99", desc: "Grilled chicken with sweet teriyaki glaze.", allergens: ["soy", "gluten"] },
+      { name: "Beef Teriyaki", price: "$15.99", desc: "Sliced beef with teriyaki sauce.", allergens: ["soy", "gluten"] },
+      { name: "Salmon Teriyaki", price: "$15.99", desc: "Grilled salmon brushed with glaze.", allergens: ["fish", "soy", "gluten"] },
+      { name: "Shrimp Teriyaki", price: "$14.99", desc: "Plump shrimp with teriyaki sauce.", allergens: ["shellfish", "soy", "gluten"] },
     ],
   },
   {
     category: "Tempura & Katsu",
     jp: "天ぷら・カツ",
     items: [
-      { name: "Chicken Tempura", price: "$11.99", desc: "Lightly battered fried chicken." },
-      { name: "Shrimp Tempura Plate", price: "$13.99", desc: "Crispy shrimp tempura entrée." },
-      { name: "Vegetable Tempura Plate", price: "$10.99", desc: "Assorted fried seasonal vegetables." },
-      { name: "Tempura Combo", price: "$14.99", desc: "Mixed shrimp and vegetable tempura." },
-      { name: "Chicken Katsu", price: "$11.99", desc: "Breaded fried chicken cutlet." },
-      { name: "Pork Katsu", price: "$12.99", desc: "Breaded fried pork cutlet." },
+      { name: "Chicken Tempura", price: "$11.99", desc: "Lightly battered fried chicken.", allergens: ["gluten", "egg", "soy"] },
+      { name: "Shrimp Tempura Plate", price: "$13.99", desc: "Crispy shrimp tempura entrée.", allergens: ["shellfish", "gluten", "egg", "soy"] },
+      { name: "Vegetable Tempura Plate", price: "$10.99", desc: "Assorted fried seasonal vegetables.", diet: ["vegetarian"], allergens: ["gluten", "egg", "soy"] },
+      { name: "Tempura Combo", price: "$14.99", desc: "Mixed shrimp and vegetable tempura.", allergens: ["shellfish", "gluten", "egg", "soy"] },
+      { name: "Chicken Katsu", price: "$11.99", desc: "Breaded fried chicken cutlet.", allergens: ["gluten", "egg", "soy"] },
+      { name: "Pork Katsu", price: "$12.99", desc: "Breaded fried pork cutlet.", allergens: ["gluten", "egg", "soy"] },
     ],
   },
   {
     category: "Noodles & Fried Rice",
     jp: "麺・炒飯",
     items: [
-      { name: "Yakisoba", price: "$10.99", desc: "Stir-fried noodles with vegetables." },
-      { name: "Udon", price: "$9.99", desc: "Thick wheat noodles in savory soup." },
-      { name: "Fried Rice", price: "$8.99", desc: "Egg, vegetables and soy sauce base." },
-      { name: "Seafood Noodles", price: "$13.99", desc: "Noodles tossed with assorted seafood." },
+      { name: "Yakisoba", price: "$10.99", desc: "Stir-fried noodles with vegetables.", allergens: ["gluten", "soy", "egg"] },
+      { name: "Udon", price: "$9.99", desc: "Thick wheat noodles in savory soup.", allergens: ["gluten", "soy", "fish"] },
+      { name: "Fried Rice", price: "$8.99", desc: "Egg, vegetables and soy sauce base.", allergens: ["egg", "soy", "gluten"] },
+      { name: "Seafood Noodles", price: "$13.99", desc: "Noodles tossed with assorted seafood.", allergens: ["gluten", "shellfish", "fish", "soy", "egg"] },
     ],
   },
   {
     category: "Hibachi & Dinner Boxes",
     jp: "鉄板焼き",
     items: [
-      { name: "Hibachi Chicken", price: "$12.99", desc: "Grilled chicken with fried rice and vegetables." },
-      { name: "Hibachi Steak", price: "$16.99", desc: "Tender steak with fried rice and vegetables." },
-      { name: "Hibachi Shrimp", price: "$15.99", desc: "Grilled shrimp with fried rice and vegetables." },
-      { name: "Mixed Hibachi", price: "$19.99", desc: "Chicken, steak and shrimp combo." },
-      { name: "Dinner Box", price: "$17.99", desc: "Entrée, fried rice, salad, California roll, gyoza & tempura." },
+      { name: "Hibachi Chicken", price: "$12.99", desc: "Grilled chicken with fried rice and vegetables.", allergens: ["soy", "egg", "gluten", "sesame"] },
+      { name: "Hibachi Steak", price: "$16.99", desc: "Tender steak with fried rice and vegetables.", allergens: ["soy", "egg", "gluten", "sesame"] },
+      { name: "Hibachi Shrimp", price: "$15.99", desc: "Grilled shrimp with fried rice and vegetables.", allergens: ["shellfish", "soy", "egg", "gluten", "sesame"] },
+      { name: "Mixed Hibachi", price: "$19.99", desc: "Chicken, steak and shrimp combo.", allergens: ["shellfish", "soy", "egg", "gluten", "sesame"] },
+      { name: "Dinner Box", price: "$17.99", desc: "Entrée, fried rice, salad, California roll, gyoza & tempura.", allergens: ["shellfish", "soy", "egg", "gluten", "sesame"] },
     ],
   },
   {
     category: "Drinks",
     jp: "飲み物",
     items: [
-      { name: "Soft Drinks", price: "$2.50", desc: "Coke, Diet Coke, Sprite and more." },
-      { name: "Iced Tea", price: "$2.50", desc: "Freshly brewed black tea." },
-      { name: "Hot Green Tea", price: "$2.50", desc: "Traditional Japanese sencha." },
-      { name: "Lemonade", price: "$2.99", desc: "Sweet, refreshing lemonade." },
-      { name: "Ramune", price: "$3.99", desc: "Classic marble-bottle Japanese soda." },
+      { name: "Soft Drinks", price: "$2.50", desc: "Coke, Diet Coke, Sprite and more.", diet: ["vegan", "gf"] },
+      { name: "Iced Tea", price: "$2.50", desc: "Freshly brewed black tea.", diet: ["vegan", "gf"] },
+      { name: "Hot Green Tea", price: "$2.50", desc: "Traditional Japanese sencha.", diet: ["vegan", "gf"] },
+      { name: "Lemonade", price: "$2.99", desc: "Sweet, refreshing lemonade.", diet: ["vegan", "gf"] },
+      { name: "Ramune", price: "$3.99", desc: "Classic marble-bottle Japanese soda.", diet: ["vegan", "gf"] },
     ],
   },
   {
     category: "Desserts",
     jp: "デザート",
     items: [
-      { name: "Fried Cheesecake", price: "$5.99", desc: "Golden-fried cheesecake with drizzle." },
-      { name: "Ice Cream", price: "$3.99", desc: "Green tea or vanilla." },
-      { name: "Mochi Ice Cream", price: "$4.99", desc: "Sweet rice cake wrapped around ice cream (seasonal)." },
+      { name: "Fried Cheesecake", price: "$5.99", desc: "Golden-fried cheesecake with drizzle.", diet: ["vegetarian"], allergens: ["gluten", "egg", "dairy"] },
+      { name: "Ice Cream", price: "$3.99", desc: "Green tea or vanilla.", diet: ["vegetarian", "gf"], allergens: ["dairy", "egg"] },
+      { name: "Mochi Ice Cream", price: "$4.99", desc: "Sweet rice cake wrapped around ice cream (seasonal).", diet: ["vegetarian"], allergens: ["dairy", "egg"] },
     ],
   },
 ];
@@ -157,7 +192,51 @@ const reviews = [
   { name: "Google Diner", quote: "Excellent food, great prices, top notch service, and killer sushi 🍣 — every roll had high quality fish.", rating: 5 },
 ];
 
+const dietBadgeStyle: Record<DietTag, string> = {
+  vegan: "border-green-700/40 text-green-700 bg-green-700/5",
+  vegetarian: "border-green-700/40 text-green-700 bg-green-700/5",
+  gf: "border-amber-700/40 text-amber-700 bg-amber-700/5",
+  spicy: "border-primary/50 text-primary bg-primary/5",
+};
+
 const Index = () => {
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string>("All");
+  const [excludedAllergens, setExcludedAllergens] = useState<AllergenTag[]>([]);
+
+  const categories = ["All", ...fullMenu.map((s) => s.category)];
+
+  const handleAllergenClick = (allergen: AllergenTag, itemName: string) => {
+    toast({
+      title: `⚠️ ${ALLERGEN_LABEL[allergen]} allergen notice`,
+      description: `"${itemName}" contains ${ALLERGEN_LABEL[allergen].toLowerCase()}. Please notify our staff of your allergy before ordering — or add a note in your online order so the kitchen is alerted.`,
+    });
+  };
+
+  const toggleExcludeAllergen = (a: AllergenTag) => {
+    setExcludedAllergens((prev) => (prev.includes(a) ? prev.filter((x) => x !== a) : [...prev, a]));
+  };
+
+  const filteredMenu = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return fullMenu
+      .filter((s) => activeCategory === "All" || s.category === activeCategory)
+      .map((s) => ({
+        ...s,
+        items: s.items.filter((item) => {
+          const matchesSearch =
+            !q ||
+            item.name.toLowerCase().includes(q) ||
+            item.desc.toLowerCase().includes(q);
+          const safe = !excludedAllergens.some((a) => item.allergens?.includes(a));
+          return matchesSearch && safe;
+        }),
+      }))
+      .filter((s) => s.items.length > 0);
+  }, [search, activeCategory, excludedAllergens]);
+
+  const totalResults = filteredMenu.reduce((acc, s) => acc + s.items.length, 0);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* NAV */}
@@ -317,41 +396,165 @@ const Index = () => {
 
           {/* Section 2: Full Menu */}
           <div className="mt-32">
-            <div className="text-center mb-16">
+            <div className="text-center mb-10">
               <p className="text-primary text-sm tracking-[0.3em] uppercase mb-3">お品書き · Full Menu</p>
               <h2 className="font-serif text-4xl md:text-6xl font-bold text-balance">The Full Menu</h2>
               <p className="text-muted-foreground max-w-xl mx-auto mt-4">
-                Browse the complete selection — from appetizers to entrées and drinks.
+                Browse the complete selection — search, filter and check allergen info before you order.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-x-16 gap-y-16 max-w-5xl mx-auto">
-              {fullMenu.map((section) => (
-                <div key={section.category}>
-                  <div className="flex items-baseline gap-3 mb-6 pb-3 border-b border-foreground/20">
-                    <h3 className="font-serif text-2xl font-bold">{section.category}</h3>
-                    <span className="font-serif text-primary text-sm">{section.jp}</span>
-                  </div>
-                  <ul className="space-y-5">
-                    {section.items.map((item) => (
-                      <li key={item.name}>
-                        <div className="flex items-baseline gap-3">
-                          <h4 className="font-medium">{item.name}</h4>
-                          <span className="flex-1 border-b border-dotted border-border/80 translate-y-[-4px]" />
-                          <span className="font-serif text-accent whitespace-nowrap">{item.price}</span>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
-                      </li>
-                    ))}
-                  </ul>
+            {/* SEARCH + FILTERS */}
+            <div className="max-w-5xl mx-auto mb-10 space-y-5">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Input
+                  type="search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search dishes, ingredients, descriptions…"
+                  className="pl-11 h-12 rounded-none border-foreground/20 bg-background"
+                  aria-label="Search menu"
+                />
+                {search && (
+                  <button
+                    onClick={() => setSearch("")}
+                    aria-label="Clear search"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+
+              {/* Category chips */}
+              <div className="flex flex-wrap gap-2">
+                {categories.map((cat) => {
+                  const active = activeCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveCategory(cat)}
+                      className={`text-xs tracking-wider uppercase px-3 py-2 border transition-colors ${
+                        active
+                          ? "bg-foreground text-background border-foreground"
+                          : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Allergen filter */}
+              <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-border/60">
+                <span className="text-xs tracking-wider uppercase text-muted-foreground mr-2 flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5" /> Hide items with:
+                </span>
+                {(Object.keys(ALLERGEN_LABEL) as AllergenTag[]).map((a) => {
+                  const excluded = excludedAllergens.includes(a);
+                  return (
+                    <button
+                      key={a}
+                      onClick={() => toggleExcludeAllergen(a)}
+                      className={`text-[11px] tracking-wider uppercase px-2.5 py-1 border transition-colors ${
+                        excluded
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "border-border/80 text-muted-foreground hover:border-primary hover:text-primary"
+                      }`}
+                    >
+                      {ALLERGEN_LABEL[a]}
+                    </button>
+                  );
+                })}
+                {excludedAllergens.length > 0 && (
+                  <button
+                    onClick={() => setExcludedAllergens([])}
+                    className="text-[11px] underline text-muted-foreground hover:text-foreground ml-1"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+
+              {/* Results count + legend */}
+              <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
+                <span>{totalResults} dish{totalResults === 1 ? "" : "es"} shown</span>
+                <div className="flex flex-wrap gap-3">
+                  <span className="inline-flex items-center gap-1"><Leaf className="w-3 h-3 text-green-700" /> Vegan / Veg</span>
+                  <span className="inline-flex items-center gap-1"><span className="font-serif text-amber-700 font-bold">GF</span> Gluten-Free</span>
+                  <span className="inline-flex items-center gap-1"><Flame className="w-3 h-3 text-primary" /> Spicy</span>
+                  <span className="inline-flex items-center gap-1"><AlertTriangle className="w-3 h-3 text-primary" /> Tap allergen to alert staff</span>
                 </div>
-              ))}
+              </div>
             </div>
+
+            {totalResults === 0 ? (
+              <div className="text-center py-16 text-muted-foreground">
+                No dishes match your search or filters. Try clearing them.
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-x-16 gap-y-16 max-w-5xl mx-auto">
+                {filteredMenu.map((section) => (
+                  <div key={section.category}>
+                    <div className="flex items-baseline gap-3 mb-6 pb-3 border-b border-foreground/20">
+                      <h3 className="font-serif text-2xl font-bold">{section.category}</h3>
+                      <span className="font-serif text-primary text-sm">{section.jp}</span>
+                    </div>
+                    <ul className="space-y-6">
+                      {section.items.map((item) => (
+                        <li key={item.name}>
+                          <div className="flex items-baseline gap-3">
+                            <h4 className="font-medium">{item.name}</h4>
+                            <span className="flex-1 border-b border-dotted border-border/80 translate-y-[-4px]" />
+                            <span className="font-serif text-accent whitespace-nowrap">{item.price}</span>
+                          </div>
+                          <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
+
+                          {/* Diet + allergen badges */}
+                          {(item.diet?.length || item.allergens?.length) ? (
+                            <div className="mt-2.5 flex flex-wrap gap-1.5">
+                              {item.diet?.map((d) => (
+                                <span
+                                  key={d}
+                                  title={DIET_LABEL[d]}
+                                  className={`inline-flex items-center gap-1 text-[10px] tracking-wider uppercase px-1.5 py-0.5 border ${dietBadgeStyle[d]}`}
+                                >
+                                  {d === "vegan" || d === "vegetarian" ? <Leaf className="w-3 h-3" /> : null}
+                                  {d === "spicy" ? <Flame className="w-3 h-3" /> : null}
+                                  {d === "gf" ? "GF" : DIET_LABEL[d]}
+                                </span>
+                              ))}
+                              {item.allergens?.map((a) => (
+                                <button
+                                  key={a}
+                                  type="button"
+                                  onClick={() => handleAllergenClick(a, item.name)}
+                                  title={`Contains ${ALLERGEN_LABEL[a]} — click to alert staff`}
+                                  className="inline-flex items-center gap-1 text-[10px] tracking-wider uppercase px-1.5 py-0.5 border border-primary/40 text-primary bg-primary/5 hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+                                >
+                                  <AlertTriangle className="w-3 h-3" />
+                                  {ALLERGEN_LABEL[a]}
+                                </button>
+                              ))}
+                            </div>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <div className="text-center mt-16">
               <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-10 border-foreground hover:bg-foreground hover:text-background">
                 <a href="https://wasabielizabethtown.com" target="_blank" rel="noopener noreferrer">Order Online</a>
               </Button>
+              <p className="text-xs text-muted-foreground mt-4 max-w-md mx-auto">
+                Have an allergy? Tap an allergen tag above for guidance, then add a note in your online order or tell our staff before ordering in-house.
+              </p>
             </div>
           </div>
         </div>
