@@ -267,9 +267,26 @@ const Index = () => {
               </div>
               <div className="flex gap-4">
                 <Clock className="w-5 h-5 text-primary mt-1 shrink-0" />
-                <div>
-                  <p className="font-medium">Hours</p>
-                  <p className="text-muted-foreground">Tue – Sun · 11:00 AM – 9:30 PM<br /><span className="text-foreground/60">Closed Mondays</span></p>
+                <div className="w-full">
+                  <p className="font-medium mb-2">Open Hours</p>
+                  <dl className="text-muted-foreground space-y-1.5 text-sm">
+                    <div className="flex justify-between gap-6 border-b border-border/60 pb-1.5">
+                      <dt>Monday</dt>
+                      <dd className="text-primary">Closed</dd>
+                    </div>
+                    <div className="flex justify-between gap-6 border-b border-border/60 pb-1.5">
+                      <dt>Tue – Thu</dt>
+                      <dd>11:00 AM – 9:00 PM</dd>
+                    </div>
+                    <div className="flex justify-between gap-6 border-b border-border/60 pb-1.5">
+                      <dt>Fri – Sat</dt>
+                      <dd>11:00 AM – 10:00 PM</dd>
+                    </div>
+                    <div className="flex justify-between gap-6">
+                      <dt>Sunday</dt>
+                      <dd>12:00 PM – 9:00 PM</dd>
+                    </div>
+                  </dl>
                 </div>
               </div>
             </div>
