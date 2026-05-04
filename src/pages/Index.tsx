@@ -104,8 +104,40 @@ const Index = () => {
         </div>
       </section>
 
+      {/* WELCOME */}
+      <section id="welcome" className="py-24 md:py-32 relative overflow-hidden">
+        <div className="absolute left-1/2 -translate-x-1/2 top-8 vertical-jp font-serif text-[9rem] font-bold text-primary/5 leading-none select-none hidden md:block">
+          いらっしゃいませ
+        </div>
+        <div className="container relative max-w-4xl text-center">
+          <p className="text-primary text-sm tracking-[0.3em] uppercase mb-4">ようこそ · Welcome</p>
+          <h2 className="font-serif text-4xl md:text-6xl font-bold mb-10 text-balance">
+            Welcome to <span className="ink-stroke">Wasabi</span> Asian Restaurant
+          </h2>
+          <div className="space-y-6 text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+            <p>
+              Located at <span className="text-foreground font-medium">1509 N Dixie Hwy, Elizabethtown, KY 42701</span>, our restaurant offers a wide array of authentic Asian food, including Tuna Roll, Hibachi Steak, and General Tso's Chicken.
+            </p>
+            <p>
+              Try our delicious food and service today. Come in for an Asian Lunch Special, or join us in the evening for a memorable dinner.
+            </p>
+            <p>
+              Have a suggestion about our food or service? Visit our customer feedback page and leave us a review — we'll respond as soon as we can.
+            </p>
+          </div>
+          <div className="mt-12 flex flex-wrap justify-center gap-4">
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8">
+              <a href="#menu">See Our Menu</a>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-8 border-foreground hover:bg-foreground hover:text-background">
+              <a href="#reviews">Leave Feedback</a>
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* MENU */}
-      <section id="menu" className="py-24 md:py-32">
+      <section id="menu" className="py-24 md:py-32 bg-card">
         <div className="container">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
             <div>
