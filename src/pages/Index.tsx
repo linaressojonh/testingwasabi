@@ -6,11 +6,71 @@ import hibachi from "@/assets/hibachi.jpg";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, Star, Utensils, ShoppingBag, Truck } from "lucide-react";
 
-const menuHighlights = [
-  { name: "Mango Roll", jp: "マンゴー", desc: "Fresh mango, crab, avocado wrapped in soy paper", price: "$12", img: mangoRoll, tag: "Popular" },
-  { name: "Miso Soup", jp: "味噌汁", desc: "Traditional broth with tofu, seaweed and scallion", price: "$4", img: misoSoup, tag: "Classic" },
-  { name: "Bento Box", jp: "弁当", desc: "Teriyaki chicken, rice, salad, dumpling and roll", price: "$15", img: bento, tag: "Lunch" },
-  { name: "Hibachi Steak", jp: "鉄板焼", desc: "Grilled steak & shrimp with fried rice & vegetables", price: "$19", img: hibachi, tag: "Signature" },
+const favorites = [
+  { name: "Dragon Roll", desc: "Shrimp tempura & cucumber topped with eel, avocado and eel sauce.", price: "$13.99", img: mangoRoll, tag: "⭐ Popular" },
+  { name: "Hibachi Chicken", desc: "Grilled chicken with fried rice, vegetables and house yum-yum sauce.", price: "$12.99", img: hibachi, tag: "🔥 Best Seller" },
+  { name: "Bento Box", desc: "Teriyaki chicken, rice, salad, dumpling and a California roll.", price: "$14.99", img: bento, tag: "⭐ Popular" },
+  { name: "Mango Roll", desc: "Fresh mango, crab and avocado wrapped in pink soy paper.", price: "$11.99", img: mangoRoll, tag: "🔥 Best Seller" },
+  { name: "Miso Soup", desc: "Traditional broth with tofu, seaweed and scallion.", price: "$3.50", img: misoSoup, tag: "⭐ Classic" },
+  { name: "Hibachi Steak & Shrimp", desc: "Grilled steak and shrimp with fried rice and vegetables.", price: "$18.99", img: hibachi, tag: "🔥 Signature" },
+];
+
+const fullMenu: { category: string; jp: string; items: { name: string; price: string; desc: string }[] }[] = [
+  {
+    category: "Appetizers",
+    jp: "前菜",
+    items: [
+      { name: "Edamame", price: "$4.50", desc: "Steamed young soybeans tossed with sea salt." },
+      { name: "Crab Rangoon", price: "$5.99", desc: "Crispy wontons filled with crab and cream cheese." },
+      { name: "Gyoza", price: "$6.50", desc: "Pan-seared pork dumplings with ponzu dipping sauce." },
+      { name: "Spring Rolls", price: "$4.99", desc: "Crisp vegetable rolls served with sweet chili sauce." },
+      { name: "Shrimp Tempura", price: "$7.99", desc: "Lightly battered shrimp fried to a golden crunch." },
+    ],
+  },
+  {
+    category: "Soups & Salads",
+    jp: "汁・サラダ",
+    items: [
+      { name: "Miso Soup", price: "$3.50", desc: "Traditional broth with tofu, seaweed and scallion." },
+      { name: "Clear Soup", price: "$3.50", desc: "Light chicken broth with mushrooms and scallion." },
+      { name: "House Salad", price: "$3.99", desc: "Crisp greens with our signature ginger dressing." },
+      { name: "Seaweed Salad", price: "$5.99", desc: "Marinated wakame seaweed with sesame seeds." },
+    ],
+  },
+  {
+    category: "Sushi Rolls",
+    jp: "巻き寿司",
+    items: [
+      { name: "California Roll", price: "$6.99", desc: "Crab, avocado and cucumber." },
+      { name: "Spicy Tuna Roll", price: "$7.99", desc: "Minced tuna with spicy mayo and crunch." },
+      { name: "Tuna Roll", price: "$6.50", desc: "Classic roll with fresh tuna." },
+      { name: "Dragon Roll", price: "$13.99", desc: "Shrimp tempura inside, eel and avocado on top." },
+      { name: "Mango Roll", price: "$11.99", desc: "Crab and avocado wrapped in mango soy paper." },
+      { name: "Rainbow Roll", price: "$12.99", desc: "California roll topped with assorted sashimi." },
+    ],
+  },
+  {
+    category: "Entrées",
+    jp: "主菜",
+    items: [
+      { name: "Hibachi Chicken", price: "$12.99", desc: "Grilled chicken, fried rice and vegetables." },
+      { name: "Hibachi Steak", price: "$16.99", desc: "Tender steak with fried rice and vegetables." },
+      { name: "Hibachi Steak & Shrimp", price: "$18.99", desc: "A surf-and-turf classic from the grill." },
+      { name: "General Tso's Chicken", price: "$11.99", desc: "Crispy chicken in a sweet and tangy chili glaze." },
+      { name: "Teriyaki Salmon", price: "$15.99", desc: "Grilled salmon brushed with house teriyaki." },
+      { name: "Bento Box", price: "$14.99", desc: "Teriyaki chicken, rice, salad, dumpling and roll." },
+    ],
+  },
+  {
+    category: "Drinks",
+    jp: "飲み物",
+    items: [
+      { name: "Hot Green Tea", price: "$2.50", desc: "Traditional Japanese sencha." },
+      { name: "Thai Iced Tea", price: "$3.50", desc: "Sweet black tea with cream." },
+      { name: "Soft Drinks", price: "$2.50", desc: "Coke, Diet Coke, Sprite, Dr. Pepper." },
+      { name: "Japanese Ramune", price: "$3.99", desc: "Classic marble-bottle Japanese soda." },
+    ],
+  },
 ];
 
 const reviews = [
@@ -139,18 +199,19 @@ const Index = () => {
       {/* MENU */}
       <section id="menu" className="py-24 md:py-32 bg-card">
         <div className="container">
+          {/* Section 1: Our Recommendations */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
             <div>
-              <p className="text-primary text-sm tracking-[0.3em] uppercase mb-3">お品書き · The Menu</p>
-              <h2 className="font-serif text-4xl md:text-6xl font-bold text-balance">Highlights from<br />the kitchen</h2>
+              <p className="text-primary text-sm tracking-[0.3em] uppercase mb-3">おすすめ · Our Recommendations</p>
+              <h2 className="font-serif text-4xl md:text-6xl font-bold text-balance">Our Favorites</h2>
             </div>
             <p className="text-muted-foreground max-w-md">
-              From the sushi bar to the hibachi grill — a tight selection of guest favorites, made fresh to order.
+              A handful of guest favorites and best-sellers — the dishes our regulars order again and again.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {menuHighlights.map((item) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {favorites.map((item) => (
               <article key={item.name} className="group bg-card border border-border overflow-hidden hover:shadow-[var(--shadow-elegant)] transition-all duration-500">
                 <div className="aspect-[4/3] overflow-hidden bg-muted">
                   <img
@@ -162,13 +223,10 @@ const Index = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                 </div>
-                <div className="p-8">
-                  <div className="flex items-baseline justify-between mb-2">
-                    <div className="flex items-baseline gap-3">
-                      <h3 className="font-serif text-2xl font-bold">{item.name}</h3>
-                      <span className="font-serif text-primary">{item.jp}</span>
-                    </div>
-                    <span className="font-serif text-xl text-accent">{item.price}</span>
+                <div className="p-6">
+                  <div className="flex items-baseline justify-between gap-3 mb-2">
+                    <h3 className="font-serif text-xl font-bold">{item.name}</h3>
+                    <span className="font-serif text-lg text-accent whitespace-nowrap">{item.price}</span>
                   </div>
                   <p className="text-muted-foreground text-sm mb-4">{item.desc}</p>
                   <span className="inline-block text-[11px] tracking-[0.2em] uppercase text-primary border border-primary/30 px-2 py-1">
@@ -179,15 +237,47 @@ const Index = () => {
             ))}
           </div>
 
-          <div className="text-center mt-16">
-            <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-10 border-foreground hover:bg-foreground hover:text-background">
-              <a href="https://wasabielizabethtown.com" target="_blank" rel="noopener noreferrer">View Full Menu</a>
-            </Button>
+          {/* Section 2: Full Menu */}
+          <div className="mt-32">
+            <div className="text-center mb-16">
+              <p className="text-primary text-sm tracking-[0.3em] uppercase mb-3">お品書き · Full Menu</p>
+              <h2 className="font-serif text-4xl md:text-6xl font-bold text-balance">The Full Menu</h2>
+              <p className="text-muted-foreground max-w-xl mx-auto mt-4">
+                Browse the complete selection — from appetizers to entrées and drinks.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-x-16 gap-y-16 max-w-5xl mx-auto">
+              {fullMenu.map((section) => (
+                <div key={section.category}>
+                  <div className="flex items-baseline gap-3 mb-6 pb-3 border-b border-foreground/20">
+                    <h3 className="font-serif text-2xl font-bold">{section.category}</h3>
+                    <span className="font-serif text-primary text-sm">{section.jp}</span>
+                  </div>
+                  <ul className="space-y-5">
+                    {section.items.map((item) => (
+                      <li key={item.name}>
+                        <div className="flex items-baseline gap-3">
+                          <h4 className="font-medium">{item.name}</h4>
+                          <span className="flex-1 border-b border-dotted border-border/80 translate-y-[-4px]" />
+                          <span className="font-serif text-accent whitespace-nowrap">{item.price}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-16">
+              <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-10 border-foreground hover:bg-foreground hover:text-background">
+                <a href="https://wasabielizabethtown.com" target="_blank" rel="noopener noreferrer">Order Online</a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* ABOUT */}
       <section id="about" className="py-24 md:py-32 bg-secondary text-secondary-foreground relative overflow-hidden">
         <div className="absolute -right-20 top-1/2 -translate-y-1/2 vertical-jp font-serif text-[14rem] font-bold text-primary/10 leading-none select-none hidden lg:block">
           和
