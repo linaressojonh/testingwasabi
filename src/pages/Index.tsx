@@ -6,11 +6,71 @@ import hibachi from "@/assets/hibachi.jpg";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Clock, Star, Utensils, ShoppingBag, Truck } from "lucide-react";
 
-const menuHighlights = [
-  { name: "Mango Roll", jp: "マンゴー", desc: "Fresh mango, crab, avocado wrapped in soy paper", price: "$12", img: mangoRoll, tag: "Popular" },
-  { name: "Miso Soup", jp: "味噌汁", desc: "Traditional broth with tofu, seaweed and scallion", price: "$4", img: misoSoup, tag: "Classic" },
-  { name: "Bento Box", jp: "弁当", desc: "Teriyaki chicken, rice, salad, dumpling and roll", price: "$15", img: bento, tag: "Lunch" },
-  { name: "Hibachi Steak", jp: "鉄板焼", desc: "Grilled steak & shrimp with fried rice & vegetables", price: "$19", img: hibachi, tag: "Signature" },
+const favorites = [
+  { name: "Dragon Roll", desc: "Shrimp tempura & cucumber topped with eel, avocado and eel sauce.", price: "$13.99", img: mangoRoll, tag: "⭐ Popular" },
+  { name: "Hibachi Chicken", desc: "Grilled chicken with fried rice, vegetables and house yum-yum sauce.", price: "$12.99", img: hibachi, tag: "🔥 Best Seller" },
+  { name: "Bento Box", desc: "Teriyaki chicken, rice, salad, dumpling and a California roll.", price: "$14.99", img: bento, tag: "⭐ Popular" },
+  { name: "Mango Roll", desc: "Fresh mango, crab and avocado wrapped in pink soy paper.", price: "$11.99", img: mangoRoll, tag: "🔥 Best Seller" },
+  { name: "Miso Soup", desc: "Traditional broth with tofu, seaweed and scallion.", price: "$3.50", img: misoSoup, tag: "⭐ Classic" },
+  { name: "Hibachi Steak & Shrimp", desc: "Grilled steak and shrimp with fried rice and vegetables.", price: "$18.99", img: hibachi, tag: "🔥 Signature" },
+];
+
+const fullMenu: { category: string; jp: string; items: { name: string; price: string; desc: string }[] }[] = [
+  {
+    category: "Appetizers",
+    jp: "前菜",
+    items: [
+      { name: "Edamame", price: "$4.50", desc: "Steamed young soybeans tossed with sea salt." },
+      { name: "Crab Rangoon", price: "$5.99", desc: "Crispy wontons filled with crab and cream cheese." },
+      { name: "Gyoza", price: "$6.50", desc: "Pan-seared pork dumplings with ponzu dipping sauce." },
+      { name: "Spring Rolls", price: "$4.99", desc: "Crisp vegetable rolls served with sweet chili sauce." },
+      { name: "Shrimp Tempura", price: "$7.99", desc: "Lightly battered shrimp fried to a golden crunch." },
+    ],
+  },
+  {
+    category: "Soups & Salads",
+    jp: "汁・サラダ",
+    items: [
+      { name: "Miso Soup", price: "$3.50", desc: "Traditional broth with tofu, seaweed and scallion." },
+      { name: "Clear Soup", price: "$3.50", desc: "Light chicken broth with mushrooms and scallion." },
+      { name: "House Salad", price: "$3.99", desc: "Crisp greens with our signature ginger dressing." },
+      { name: "Seaweed Salad", price: "$5.99", desc: "Marinated wakame seaweed with sesame seeds." },
+    ],
+  },
+  {
+    category: "Sushi Rolls",
+    jp: "巻き寿司",
+    items: [
+      { name: "California Roll", price: "$6.99", desc: "Crab, avocado and cucumber." },
+      { name: "Spicy Tuna Roll", price: "$7.99", desc: "Minced tuna with spicy mayo and crunch." },
+      { name: "Tuna Roll", price: "$6.50", desc: "Classic roll with fresh tuna." },
+      { name: "Dragon Roll", price: "$13.99", desc: "Shrimp tempura inside, eel and avocado on top." },
+      { name: "Mango Roll", price: "$11.99", desc: "Crab and avocado wrapped in mango soy paper." },
+      { name: "Rainbow Roll", price: "$12.99", desc: "California roll topped with assorted sashimi." },
+    ],
+  },
+  {
+    category: "Entrées",
+    jp: "主菜",
+    items: [
+      { name: "Hibachi Chicken", price: "$12.99", desc: "Grilled chicken, fried rice and vegetables." },
+      { name: "Hibachi Steak", price: "$16.99", desc: "Tender steak with fried rice and vegetables." },
+      { name: "Hibachi Steak & Shrimp", price: "$18.99", desc: "A surf-and-turf classic from the grill." },
+      { name: "General Tso's Chicken", price: "$11.99", desc: "Crispy chicken in a sweet and tangy chili glaze." },
+      { name: "Teriyaki Salmon", price: "$15.99", desc: "Grilled salmon brushed with house teriyaki." },
+      { name: "Bento Box", price: "$14.99", desc: "Teriyaki chicken, rice, salad, dumpling and roll." },
+    ],
+  },
+  {
+    category: "Drinks",
+    jp: "飲み物",
+    items: [
+      { name: "Hot Green Tea", price: "$2.50", desc: "Traditional Japanese sencha." },
+      { name: "Thai Iced Tea", price: "$3.50", desc: "Sweet black tea with cream." },
+      { name: "Soft Drinks", price: "$2.50", desc: "Coke, Diet Coke, Sprite, Dr. Pepper." },
+      { name: "Japanese Ramune", price: "$3.99", desc: "Classic marble-bottle Japanese soda." },
+    ],
+  },
 ];
 
 const reviews = [
