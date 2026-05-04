@@ -199,18 +199,19 @@ const Index = () => {
       {/* MENU */}
       <section id="menu" className="py-24 md:py-32 bg-card">
         <div className="container">
+          {/* Section 1: Our Recommendations */}
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
             <div>
-              <p className="text-primary text-sm tracking-[0.3em] uppercase mb-3">お品書き · The Menu</p>
-              <h2 className="font-serif text-4xl md:text-6xl font-bold text-balance">Highlights from<br />the kitchen</h2>
+              <p className="text-primary text-sm tracking-[0.3em] uppercase mb-3">おすすめ · Our Recommendations</p>
+              <h2 className="font-serif text-4xl md:text-6xl font-bold text-balance">Our Favorites</h2>
             </div>
             <p className="text-muted-foreground max-w-md">
-              From the sushi bar to the hibachi grill — a tight selection of guest favorites, made fresh to order.
+              A handful of guest favorites and best-sellers — the dishes our regulars order again and again.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {menuHighlights.map((item) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {favorites.map((item) => (
               <article key={item.name} className="group bg-card border border-border overflow-hidden hover:shadow-[var(--shadow-elegant)] transition-all duration-500">
                 <div className="aspect-[4/3] overflow-hidden bg-muted">
                   <img
@@ -222,13 +223,10 @@ const Index = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                 </div>
-                <div className="p-8">
-                  <div className="flex items-baseline justify-between mb-2">
-                    <div className="flex items-baseline gap-3">
-                      <h3 className="font-serif text-2xl font-bold">{item.name}</h3>
-                      <span className="font-serif text-primary">{item.jp}</span>
-                    </div>
-                    <span className="font-serif text-xl text-accent">{item.price}</span>
+                <div className="p-6">
+                  <div className="flex items-baseline justify-between gap-3 mb-2">
+                    <h3 className="font-serif text-xl font-bold">{item.name}</h3>
+                    <span className="font-serif text-lg text-accent whitespace-nowrap">{item.price}</span>
                   </div>
                   <p className="text-muted-foreground text-sm mb-4">{item.desc}</p>
                   <span className="inline-block text-[11px] tracking-[0.2em] uppercase text-primary border border-primary/30 px-2 py-1">
@@ -239,15 +237,47 @@ const Index = () => {
             ))}
           </div>
 
-          <div className="text-center mt-16">
-            <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-10 border-foreground hover:bg-foreground hover:text-background">
-              <a href="https://wasabielizabethtown.com" target="_blank" rel="noopener noreferrer">View Full Menu</a>
-            </Button>
+          {/* Section 2: Full Menu */}
+          <div className="mt-32">
+            <div className="text-center mb-16">
+              <p className="text-primary text-sm tracking-[0.3em] uppercase mb-3">お品書き · Full Menu</p>
+              <h2 className="font-serif text-4xl md:text-6xl font-bold text-balance">The Full Menu</h2>
+              <p className="text-muted-foreground max-w-xl mx-auto mt-4">
+                Browse the complete selection — from appetizers to entrées and drinks.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-x-16 gap-y-16 max-w-5xl mx-auto">
+              {fullMenu.map((section) => (
+                <div key={section.category}>
+                  <div className="flex items-baseline gap-3 mb-6 pb-3 border-b border-foreground/20">
+                    <h3 className="font-serif text-2xl font-bold">{section.category}</h3>
+                    <span className="font-serif text-primary text-sm">{section.jp}</span>
+                  </div>
+                  <ul className="space-y-5">
+                    {section.items.map((item) => (
+                      <li key={item.name}>
+                        <div className="flex items-baseline gap-3">
+                          <h4 className="font-medium">{item.name}</h4>
+                          <span className="flex-1 border-b border-dotted border-border/80 translate-y-[-4px]" />
+                          <span className="font-serif text-accent whitespace-nowrap">{item.price}</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-16">
+              <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-10 border-foreground hover:bg-foreground hover:text-background">
+                <a href="https://wasabielizabethtown.com" target="_blank" rel="noopener noreferrer">Order Online</a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* ABOUT */}
       <section id="about" className="py-24 md:py-32 bg-secondary text-secondary-foreground relative overflow-hidden">
         <div className="absolute -right-20 top-1/2 -translate-y-1/2 vertical-jp font-serif text-[14rem] font-bold text-primary/10 leading-none select-none hidden lg:block">
           和
