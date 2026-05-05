@@ -253,7 +253,7 @@ const Index = () => {
             <a href="#visit" className="hover:text-primary transition-colors">Visit</a>
           </div>
           <Button asChild size="sm" className="bg-primary hover:bg-primary/90 rounded-none">
-            <a href="https://wasabielizabethtown.com" target="_blank" rel="noopener noreferrer">Order Online</a>
+            <a href="/order">Order Online</a>
           </Button>
         </nav>
       </header>
@@ -550,7 +550,7 @@ const Index = () => {
 
             <div className="text-center mt-16">
               <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-10 border-foreground hover:bg-foreground hover:text-background">
-                <a href="https://wasabielizabethtown.com" target="_blank" rel="noopener noreferrer">Order Online</a>
+                <a href="/order">Order Online</a>
               </Button>
               <p className="text-xs text-muted-foreground mt-4 max-w-md mx-auto">
                 Have an allergy? Tap an allergen tag above for guidance, then add a note in your online order or tell our staff before ordering in-house.
