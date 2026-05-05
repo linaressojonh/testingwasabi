@@ -247,7 +247,7 @@ const Index = () => {
             <span className="font-serif text-sm text-primary">わさび</span>
           </a>
           <div className="hidden md:flex items-center gap-8 text-sm">
-            <a href="#menu" className="hover:text-primary transition-colors">Menu</a>
+            <a href="/menu" className="hover:text-primary transition-colors">Menu</a>
             <a href="#about" className="hover:text-primary transition-colors">About</a>
             <a href="#reviews" className="hover:text-primary transition-colors">Reviews</a>
             <a href="#visit" className="hover:text-primary transition-colors">Visit</a>
@@ -283,7 +283,7 @@ const Index = () => {
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
               <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8">
-                <a href="#menu">Explore Menu</a>
+                <a href="/menu">Explore Menu</a>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-none h-12 px-8 bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground hover:text-foreground">
                 <a href="tel:+12709000670">Reserve a Table</a>
@@ -344,7 +344,7 @@ const Index = () => {
           </div>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
             <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8">
-              <a href="#menu">See Our Menu</a>
+              <a href="/menu">See Our Menu</a>
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-8 border-foreground hover:bg-foreground hover:text-background">
               <a href="#reviews">Leave Feedback</a>
