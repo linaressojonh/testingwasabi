@@ -132,34 +132,34 @@ const Order = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* NAV */}
-      <header className="sticky top-0 z-40 bg-background/85 backdrop-blur-md border-b border-border">
+      <header className="sticky top-0 z-40 bg-background/70 backdrop-blur-xl border-b border-border/60">
         <nav className="container flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors story-link">
             <ArrowLeft className="w-4 h-4" /> Back to Wasabi
           </Link>
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-2 hover-scale">
             <span className="font-serif text-xl font-bold">Wasabi</span>
             <span className="font-serif text-xs text-primary">注文</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-sm relative">
             <ShoppingBag className="w-4 h-4 text-primary" />
-            <span>{totalQty}</span>
+            <span key={totalQty} className="inline-block animate-fade-up font-medium">{totalQty}</span>
           </div>
         </nav>
       </header>
 
       {/* HEADER */}
-      <section className="container pt-12 pb-8 max-w-6xl">
+      <section className="container pt-12 pb-8 max-w-6xl animate-fade-up">
         <p className="text-primary text-sm tracking-[0.3em] uppercase mb-3">注文 · Order Online</p>
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-balance mb-3">
-          Build your order
+          Build your <span className="ink-stroke">order</span>
         </h1>
         <p className="text-muted-foreground max-w-2xl">
           Pick takeout or delivery, customize each dish, and send it straight to our kitchen.
         </p>
 
         {/* Order type tabs */}
-        <div className="mt-8 inline-flex border border-border">
+        <div className="mt-8 inline-flex border border-border bg-card/50 backdrop-blur-sm">
           {([
             { v: "takeout", icon: ShoppingBag, label: "Takeout" },
             { v: "delivery", icon: Truck, label: "Delivery" },
@@ -169,17 +169,19 @@ const Order = () => {
               <button
                 key={v}
                 onClick={() => setOrderType(v)}
-                className={`flex items-center gap-2 px-5 py-3 text-sm tracking-wider uppercase transition-colors ${
-                  active ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+                className={`flex items-center gap-2 px-5 py-3 text-sm tracking-wider uppercase transition-all duration-300 btn-press ${
+                  active
+                    ? "bg-primary text-primary-foreground shadow-[var(--shadow-glow)]"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
-                <Icon className="w-4 h-4" /> {label}
+                <Icon className={`w-4 h-4 transition-transform duration-300 ${active ? "scale-110" : ""}`} /> {label}
               </button>
             );
           })}
         </div>
         {orderType === "delivery" && (
-          <p className="mt-3 text-xs text-muted-foreground flex items-center gap-2">
+          <p className="mt-3 text-xs text-muted-foreground flex items-center gap-2 animate-fade-up">
             <Truck className="w-3.5 h-3.5" /> Delivery orders are completed via our DoorDash partner at checkout.
           </p>
         )}
