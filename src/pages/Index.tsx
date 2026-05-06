@@ -310,8 +310,8 @@ const Index = () => {
             { icon: ShoppingBag, title: "Takeout", desc: "Order ahead, ready fast" },
             { icon: Truck, title: "Delivery", desc: "Brought right to your door" },
           ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex items-center gap-4 py-8 px-6 md:justify-center">
-              <Icon className="w-6 h-6 text-primary" />
+            <div key={title} className="group flex items-center gap-4 py-8 px-6 md:justify-center transition-colors hover:bg-primary/5">
+              <Icon className="w-6 h-6 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
               <div>
                 <p className="font-serif text-lg">{title}</p>
                 <p className="text-sm text-muted-foreground">{desc}</p>
