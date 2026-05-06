@@ -367,25 +367,30 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {favorites.map((item) => (
-              <article key={item.name} className="group bg-card border border-border overflow-hidden hover:shadow-[var(--shadow-elegant)] transition-all duration-500">
-                <div className="aspect-[4/3] overflow-hidden bg-muted">
+            {favorites.map((item, idx) => (
+              <article
+                key={item.name}
+                style={{ animationDelay: `${idx * 80}ms` }}
+                className="group relative bg-card border border-border overflow-hidden hover-lift shimmer-border animate-fade-up"
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-muted relative">
                   <img
                     src={item.img}
                     alt={item.name}
                     loading="lazy"
                     width={1024}
                     height={1024}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-500" />
                 </div>
                 <div className="p-6">
                   <div className="flex items-baseline justify-between gap-3 mb-2">
-                    <h3 className="font-serif text-xl font-bold">{item.name}</h3>
+                    <h3 className="font-serif text-xl font-bold group-hover:text-primary transition-colors duration-300">{item.name}</h3>
                     <span className="font-serif text-lg text-accent whitespace-nowrap">{item.price}</span>
                   </div>
                   <p className="text-muted-foreground text-sm mb-4">{item.desc}</p>
-                  <span className="inline-block text-[11px] tracking-[0.2em] uppercase text-primary border border-primary/30 px-2 py-1">
+                  <span className="inline-block text-[11px] tracking-[0.2em] uppercase text-primary border border-primary/30 px-2 py-1 transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
                     {item.tag}
                   </span>
                 </div>
