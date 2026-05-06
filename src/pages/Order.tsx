@@ -477,7 +477,7 @@ const Order = () => {
               <Button
                 onClick={handleCheckout}
                 size="lg"
-                className="w-full rounded-none bg-primary hover:bg-primary/90 h-12"
+                className="w-full rounded-none bg-primary hover:bg-primary/90 h-12 btn-press hover:shadow-[var(--shadow-glow)] transition-all"
                 disabled={cart.length === 0}
               >
                 {orderType === "delivery" ? "Continue to DoorDash" : "Place Takeout Order"}
