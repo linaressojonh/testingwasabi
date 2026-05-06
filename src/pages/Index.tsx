@@ -420,8 +420,12 @@ const Index = () => {
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {reviews.map((r) => (
-              <div key={r.name} className="bg-card border border-border p-8 hover:shadow-[var(--shadow-soft)] transition-shadow">
+            {reviews.map((r, idx) => (
+              <div
+                key={r.name}
+                style={{ animationDelay: `${idx * 120}ms` }}
+                className="bg-card border border-border p-8 hover-lift shimmer-border animate-fade-up"
+              >
                 <div className="flex gap-1 mb-4">
                   {[...Array(r.rating)].map((_, i) => <Star key={i} className="w-4 h-4 fill-accent text-accent" />)}
                 </div>
