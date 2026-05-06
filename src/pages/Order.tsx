@@ -132,34 +132,34 @@ const Order = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* NAV */}
-      <header className="sticky top-0 z-40 bg-background/85 backdrop-blur-md border-b border-border">
+      <header className="sticky top-0 z-40 bg-background/70 backdrop-blur-xl border-b border-border/60">
         <nav className="container flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+          <Link to="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors story-link">
             <ArrowLeft className="w-4 h-4" /> Back to Wasabi
           </Link>
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-2 hover-scale">
             <span className="font-serif text-xl font-bold">Wasabi</span>
             <span className="font-serif text-xs text-primary">注文</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2 text-sm relative">
             <ShoppingBag className="w-4 h-4 text-primary" />
-            <span>{totalQty}</span>
+            <span key={totalQty} className="inline-block animate-fade-up font-medium">{totalQty}</span>
           </div>
         </nav>
       </header>
 
       {/* HEADER */}
-      <section className="container pt-12 pb-8 max-w-6xl">
+      <section className="container pt-12 pb-8 max-w-6xl animate-fade-up">
         <p className="text-primary text-sm tracking-[0.3em] uppercase mb-3">注文 · Order Online</p>
         <h1 className="font-serif text-4xl md:text-5xl font-bold text-balance mb-3">
-          Build your order
+          Build your <span className="ink-stroke">order</span>
         </h1>
         <p className="text-muted-foreground max-w-2xl">
           Pick takeout or delivery, customize each dish, and send it straight to our kitchen.
         </p>
 
         {/* Order type tabs */}
-        <div className="mt-8 inline-flex border border-border">
+        <div className="mt-8 inline-flex border border-border bg-card/50 backdrop-blur-sm">
           {([
             { v: "takeout", icon: ShoppingBag, label: "Takeout" },
             { v: "delivery", icon: Truck, label: "Delivery" },
@@ -169,17 +169,19 @@ const Order = () => {
               <button
                 key={v}
                 onClick={() => setOrderType(v)}
-                className={`flex items-center gap-2 px-5 py-3 text-sm tracking-wider uppercase transition-colors ${
-                  active ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+                className={`flex items-center gap-2 px-5 py-3 text-sm tracking-wider uppercase transition-all duration-300 btn-press ${
+                  active
+                    ? "bg-primary text-primary-foreground shadow-[var(--shadow-glow)]"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                 }`}
               >
-                <Icon className="w-4 h-4" /> {label}
+                <Icon className={`w-4 h-4 transition-transform duration-300 ${active ? "scale-110" : ""}`} /> {label}
               </button>
             );
           })}
         </div>
         {orderType === "delivery" && (
-          <p className="mt-3 text-xs text-muted-foreground flex items-center gap-2">
+          <p className="mt-3 text-xs text-muted-foreground flex items-center gap-2 animate-fade-up">
             <Truck className="w-3.5 h-3.5" /> Delivery orders are completed via our DoorDash partner at checkout.
           </p>
         )}
@@ -256,10 +258,14 @@ const Order = () => {
                   <span className="font-serif text-primary text-sm">{section.jp}</span>
                 </div>
                 <ul className="grid sm:grid-cols-2 gap-4">
-                  {section.items.map((item) => (
-                    <li key={item.name} className="border border-border bg-card p-4 flex flex-col">
+                  {section.items.map((item, idx) => (
+                    <li
+                      key={item.name}
+                      style={{ animationDelay: `${idx * 40}ms` }}
+                      className="border border-border bg-card p-4 flex flex-col hover-lift shimmer-border animate-fade-up group"
+                    >
                       <div className="flex items-baseline justify-between gap-3">
-                        <h4 className="font-medium">{item.name}</h4>
+                        <h4 className="font-medium group-hover:text-primary transition-colors">{item.name}</h4>
                         <span className="font-serif text-accent">{item.price}</span>
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
@@ -285,9 +291,9 @@ const Order = () => {
                       <Button
                         size="sm"
                         onClick={() => addToCart(item)}
-                        className="mt-4 self-start rounded-none bg-primary hover:bg-primary/90"
+                        className="mt-4 self-start rounded-none bg-primary hover:bg-primary/90 btn-press hover:shadow-[var(--shadow-glow)] transition-all"
                       >
-                        <Plus className="w-3.5 h-3.5" /> Add to cart
+                        <Plus className="w-3.5 h-3.5 transition-transform group-hover:rotate-90" /> Add to cart
                       </Button>
                     </li>
                   ))}
@@ -299,25 +305,25 @@ const Order = () => {
 
         {/* CART COLUMN */}
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <div className="border border-border bg-card">
+          <div className="border border-border bg-card shimmer-border relative">
             <div className="p-5 border-b border-border flex items-center justify-between">
               <h2 className="font-serif text-xl font-bold flex items-center gap-2">
-                <ShoppingBag className="w-4 h-4 text-primary" /> Your Order
+                <ShoppingBag className={`w-4 h-4 text-primary transition-transform ${totalQty > 0 ? "animate-float" : ""}`} /> Your Order
               </h2>
-              <span className="text-xs text-muted-foreground">{totalQty} item{totalQty === 1 ? "" : "s"}</span>
+              <span key={totalQty} className="text-xs text-muted-foreground animate-fade-up">{totalQty} item{totalQty === 1 ? "" : "s"}</span>
             </div>
 
             <div className="max-h-[55vh] overflow-y-auto divide-y divide-border">
               {cart.length === 0 && (
-                <p className="p-8 text-sm text-muted-foreground text-center">
+                <p className="p-8 text-sm text-muted-foreground text-center animate-fade-in">
                   Your cart is empty. Add dishes from the menu.
                 </p>
               )}
               {cart.map((line) => (
-                <div key={line.id} className="p-5 space-y-3">
+                <div key={line.id} className="p-5 space-y-3 animate-slide-in-right">
                   <div className="flex items-baseline justify-between gap-2">
                     <h4 className="font-medium">{line.item.name}</h4>
-                    <button onClick={() => removeLine(line.id)} aria-label="Remove" className="text-muted-foreground hover:text-primary">
+                    <button onClick={() => removeLine(line.id)} aria-label="Remove" className="text-muted-foreground hover:text-primary hover:scale-110 transition-all btn-press">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
@@ -326,19 +332,18 @@ const Order = () => {
                     <div className="inline-flex items-center border border-border">
                       <button
                         onClick={() => updateLine(line.id, { qty: Math.max(1, line.qty - 1) })}
-                        className="p-2 hover:bg-muted" aria-label="Decrease"
+                        className="p-2 hover:bg-primary hover:text-primary-foreground transition-colors btn-press" aria-label="Decrease"
                       ><Minus className="w-3.5 h-3.5" /></button>
-                      <span className="px-3 text-sm w-8 text-center">{line.qty}</span>
+                      <span key={line.qty} className="px-3 text-sm w-8 text-center font-medium animate-fade-up inline-block">{line.qty}</span>
                       <button
                         onClick={() => updateLine(line.id, { qty: line.qty + 1 })}
-                        className="p-2 hover:bg-muted" aria-label="Increase"
+                        className="p-2 hover:bg-primary hover:text-primary-foreground transition-colors btn-press" aria-label="Increase"
                       ><Plus className="w-3.5 h-3.5" /></button>
                     </div>
-                    <span className="font-serif text-accent">
+                    <span key={`p-${line.qty}`} className="font-serif text-accent animate-fade-up">
                       ${(priceToNumber(line.item.price) * line.qty).toFixed(2)}
                     </span>
                   </div>
-
                   {/* Customize: remove ingredients */}
                   <details className="text-sm">
                     <summary className="cursor-pointer text-xs tracking-wider uppercase text-muted-foreground hover:text-foreground">
@@ -472,7 +477,7 @@ const Order = () => {
               <Button
                 onClick={handleCheckout}
                 size="lg"
-                className="w-full rounded-none bg-primary hover:bg-primary/90 h-12"
+                className="w-full rounded-none bg-primary hover:bg-primary/90 h-12 btn-press hover:shadow-[var(--shadow-glow)] transition-all"
                 disabled={cart.length === 0}
               >
                 {orderType === "delivery" ? "Continue to DoorDash" : "Place Takeout Order"}
