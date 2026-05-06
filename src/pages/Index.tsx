@@ -240,19 +240,19 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* NAV */}
-      <header className="fixed top-0 inset-x-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+      <header className="fixed top-0 inset-x-0 z-50 bg-background/70 backdrop-blur-xl border-b border-border/60">
         <nav className="container flex items-center justify-between h-16">
-          <a href="#" className="flex items-baseline gap-2">
+          <a href="#" className="flex items-baseline gap-2 hover-scale">
             <span className="font-serif text-2xl font-bold tracking-tight">Wasabi</span>
             <span className="font-serif text-sm text-primary">わさび</span>
           </a>
           <div className="hidden md:flex items-center gap-8 text-sm">
-            <a href="/menu" className="hover:text-primary transition-colors">Menu</a>
-            <a href="#about" className="hover:text-primary transition-colors">About</a>
-            <a href="#reviews" className="hover:text-primary transition-colors">Reviews</a>
-            <a href="#visit" className="hover:text-primary transition-colors">Visit</a>
+            <a href="/menu" className="story-link hover:text-primary transition-colors">Menu</a>
+            <a href="#about" className="story-link hover:text-primary transition-colors">About</a>
+            <a href="#reviews" className="story-link hover:text-primary transition-colors">Reviews</a>
+            <a href="#visit" className="story-link hover:text-primary transition-colors">Visit</a>
           </div>
-          <Button asChild size="sm" className="bg-primary hover:bg-primary/90 rounded-none">
+          <Button asChild size="sm" className="bg-primary hover:bg-primary/90 rounded-none btn-press animate-pulse-glow">
             <a href="/order">Order Online</a>
           </Button>
         </nav>
