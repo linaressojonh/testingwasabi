@@ -282,7 +282,7 @@ const Index = () => {
               A light-filled kitchen serving thoughtfully prepared sushi, bento and hibachi in the heart of Elizabethtown.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8 btn-press hover:shadow-[var(--shadow-glow)] transition-shadow">
                 <a href="/menu">Explore Menu</a>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-none h-12 px-8 bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground hover:text-foreground">
@@ -343,7 +343,7 @@ const Index = () => {
             </p>
           </div>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8">
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8 btn-press hover:shadow-[var(--shadow-glow)] transition-shadow">
               <a href="/menu">See Our Menu</a>
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-8 border-foreground hover:bg-foreground hover:text-background">
@@ -399,7 +399,7 @@ const Index = () => {
           </div>
 
           <div className="text-center mt-16 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-10">
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-10 btn-press hover:shadow-[var(--shadow-glow)] transition-shadow">
               <a href="/menu">View Full Menu</a>
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-10 border-foreground hover:bg-foreground hover:text-background">
