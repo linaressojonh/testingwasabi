@@ -305,25 +305,25 @@ const Order = () => {
 
         {/* CART COLUMN */}
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <div className="border border-border bg-card">
+          <div className="border border-border bg-card shimmer-border relative">
             <div className="p-5 border-b border-border flex items-center justify-between">
               <h2 className="font-serif text-xl font-bold flex items-center gap-2">
-                <ShoppingBag className="w-4 h-4 text-primary" /> Your Order
+                <ShoppingBag className={`w-4 h-4 text-primary transition-transform ${totalQty > 0 ? "animate-float" : ""}`} /> Your Order
               </h2>
-              <span className="text-xs text-muted-foreground">{totalQty} item{totalQty === 1 ? "" : "s"}</span>
+              <span key={totalQty} className="text-xs text-muted-foreground animate-fade-up">{totalQty} item{totalQty === 1 ? "" : "s"}</span>
             </div>
 
             <div className="max-h-[55vh] overflow-y-auto divide-y divide-border">
               {cart.length === 0 && (
-                <p className="p-8 text-sm text-muted-foreground text-center">
+                <p className="p-8 text-sm text-muted-foreground text-center animate-fade-in">
                   Your cart is empty. Add dishes from the menu.
                 </p>
               )}
               {cart.map((line) => (
-                <div key={line.id} className="p-5 space-y-3">
+                <div key={line.id} className="p-5 space-y-3 animate-slide-in-right">
                   <div className="flex items-baseline justify-between gap-2">
                     <h4 className="font-medium">{line.item.name}</h4>
-                    <button onClick={() => removeLine(line.id)} aria-label="Remove" className="text-muted-foreground hover:text-primary">
+                    <button onClick={() => removeLine(line.id)} aria-label="Remove" className="text-muted-foreground hover:text-primary hover:scale-110 transition-all btn-press">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
@@ -332,19 +332,18 @@ const Order = () => {
                     <div className="inline-flex items-center border border-border">
                       <button
                         onClick={() => updateLine(line.id, { qty: Math.max(1, line.qty - 1) })}
-                        className="p-2 hover:bg-muted" aria-label="Decrease"
+                        className="p-2 hover:bg-primary hover:text-primary-foreground transition-colors btn-press" aria-label="Decrease"
                       ><Minus className="w-3.5 h-3.5" /></button>
-                      <span className="px-3 text-sm w-8 text-center">{line.qty}</span>
+                      <span key={line.qty} className="px-3 text-sm w-8 text-center font-medium animate-fade-up inline-block">{line.qty}</span>
                       <button
                         onClick={() => updateLine(line.id, { qty: line.qty + 1 })}
-                        className="p-2 hover:bg-muted" aria-label="Increase"
+                        className="p-2 hover:bg-primary hover:text-primary-foreground transition-colors btn-press" aria-label="Increase"
                       ><Plus className="w-3.5 h-3.5" /></button>
                     </div>
-                    <span className="font-serif text-accent">
+                    <span key={`p-${line.qty}`} className="font-serif text-accent animate-fade-up">
                       ${(priceToNumber(line.item.price) * line.qty).toFixed(2)}
                     </span>
                   </div>
-
                   {/* Customize: remove ingredients */}
                   <details className="text-sm">
                     <summary className="cursor-pointer text-xs tracking-wider uppercase text-muted-foreground hover:text-foreground">
