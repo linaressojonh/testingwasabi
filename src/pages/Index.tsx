@@ -240,19 +240,19 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* NAV */}
-      <header className="fixed top-0 inset-x-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+      <header className="fixed top-0 inset-x-0 z-50 bg-background/70 backdrop-blur-xl border-b border-border/60">
         <nav className="container flex items-center justify-between h-16">
-          <a href="#" className="flex items-baseline gap-2">
+          <a href="#" className="flex items-baseline gap-2 hover-scale">
             <span className="font-serif text-2xl font-bold tracking-tight">Wasabi</span>
             <span className="font-serif text-sm text-primary">わさび</span>
           </a>
           <div className="hidden md:flex items-center gap-8 text-sm">
-            <a href="/menu" className="hover:text-primary transition-colors">Menu</a>
-            <a href="#about" className="hover:text-primary transition-colors">About</a>
-            <a href="#reviews" className="hover:text-primary transition-colors">Reviews</a>
-            <a href="#visit" className="hover:text-primary transition-colors">Visit</a>
+            <a href="/menu" className="story-link hover:text-primary transition-colors">Menu</a>
+            <a href="#about" className="story-link hover:text-primary transition-colors">About</a>
+            <a href="#reviews" className="story-link hover:text-primary transition-colors">Reviews</a>
+            <a href="#visit" className="story-link hover:text-primary transition-colors">Visit</a>
           </div>
-          <Button asChild size="sm" className="bg-primary hover:bg-primary/90 rounded-none">
+          <Button asChild size="sm" className="bg-primary hover:bg-primary/90 rounded-none btn-press animate-pulse-glow">
             <a href="/order">Order Online</a>
           </Button>
         </nav>
@@ -282,7 +282,7 @@ const Index = () => {
               A light-filled kitchen serving thoughtfully prepared sushi, bento and hibachi in the heart of Elizabethtown.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8 btn-press hover:shadow-[var(--shadow-glow)] transition-shadow">
                 <a href="/menu">Explore Menu</a>
               </Button>
               <Button asChild size="lg" variant="outline" className="rounded-none h-12 px-8 bg-transparent border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground hover:text-foreground">
@@ -310,8 +310,8 @@ const Index = () => {
             { icon: ShoppingBag, title: "Takeout", desc: "Order ahead, ready fast" },
             { icon: Truck, title: "Delivery", desc: "Brought right to your door" },
           ].map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex items-center gap-4 py-8 px-6 md:justify-center">
-              <Icon className="w-6 h-6 text-primary" />
+            <div key={title} className="group flex items-center gap-4 py-8 px-6 md:justify-center transition-colors hover:bg-primary/5">
+              <Icon className="w-6 h-6 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6" />
               <div>
                 <p className="font-serif text-lg">{title}</p>
                 <p className="text-sm text-muted-foreground">{desc}</p>
@@ -343,7 +343,7 @@ const Index = () => {
             </p>
           </div>
           <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8">
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-8 btn-press hover:shadow-[var(--shadow-glow)] transition-shadow">
               <a href="/menu">See Our Menu</a>
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-8 border-foreground hover:bg-foreground hover:text-background">
@@ -367,25 +367,30 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {favorites.map((item) => (
-              <article key={item.name} className="group bg-card border border-border overflow-hidden hover:shadow-[var(--shadow-elegant)] transition-all duration-500">
-                <div className="aspect-[4/3] overflow-hidden bg-muted">
+            {favorites.map((item, idx) => (
+              <article
+                key={item.name}
+                style={{ animationDelay: `${idx * 80}ms` }}
+                className="group relative bg-card border border-border overflow-hidden hover-lift shimmer-border animate-fade-up"
+              >
+                <div className="aspect-[4/3] overflow-hidden bg-muted relative">
                   <img
                     src={item.img}
                     alt={item.name}
                     loading="lazy"
                     width={1024}
                     height={1024}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent opacity-60 group-hover:opacity-30 transition-opacity duration-500" />
                 </div>
                 <div className="p-6">
                   <div className="flex items-baseline justify-between gap-3 mb-2">
-                    <h3 className="font-serif text-xl font-bold">{item.name}</h3>
+                    <h3 className="font-serif text-xl font-bold group-hover:text-primary transition-colors duration-300">{item.name}</h3>
                     <span className="font-serif text-lg text-accent whitespace-nowrap">{item.price}</span>
                   </div>
                   <p className="text-muted-foreground text-sm mb-4">{item.desc}</p>
-                  <span className="inline-block text-[11px] tracking-[0.2em] uppercase text-primary border border-primary/30 px-2 py-1">
+                  <span className="inline-block text-[11px] tracking-[0.2em] uppercase text-primary border border-primary/30 px-2 py-1 transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
                     {item.tag}
                   </span>
                 </div>
@@ -394,7 +399,7 @@ const Index = () => {
           </div>
 
           <div className="text-center mt-16 flex flex-wrap justify-center gap-4">
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-10">
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-10 btn-press hover:shadow-[var(--shadow-glow)] transition-shadow">
               <a href="/menu">View Full Menu</a>
             </Button>
             <Button asChild variant="outline" size="lg" className="rounded-none h-12 px-10 border-foreground hover:bg-foreground hover:text-background">
@@ -415,8 +420,12 @@ const Index = () => {
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {reviews.map((r) => (
-              <div key={r.name} className="bg-card border border-border p-8 hover:shadow-[var(--shadow-soft)] transition-shadow">
+            {reviews.map((r, idx) => (
+              <div
+                key={r.name}
+                style={{ animationDelay: `${idx * 120}ms` }}
+                className="bg-card border border-border p-8 hover-lift shimmer-border animate-fade-up"
+              >
                 <div className="flex gap-1 mb-4">
                   {[...Array(r.rating)].map((_, i) => <Star key={i} className="w-4 h-4 fill-accent text-accent" />)}
                 </div>

@@ -278,7 +278,7 @@ const Menu = () => {
           )}
 
           <div className="text-center mt-16">
-            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-10">
+            <Button asChild size="lg" className="bg-primary hover:bg-primary/90 rounded-none h-12 px-10 btn-press hover:shadow-[var(--shadow-glow)] transition-shadow">
               <Link to="/order">Order Online</Link>
             </Button>
             <p className="text-xs text-muted-foreground mt-4 max-w-md mx-auto">
