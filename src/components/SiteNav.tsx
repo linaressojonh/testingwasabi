@@ -43,7 +43,7 @@ const SiteNav = () => {
         <button
           onClick={toggle}
           aria-label="Toggle theme"
-          className="h-11 w-11 grid place-items-center bg-card/85 backdrop-blur-md border border-border hover:border-primary text-foreground btn-press transition-all hover:shadow-[var(--shadow-glow)] group"
+          className="relative h-11 w-11 grid place-items-center bg-card/85 backdrop-blur-md border border-border hover:border-primary text-foreground btn-press transition-all hover:shadow-[var(--shadow-glow)]"
         >
           <Sun className={`w-5 h-5 absolute transition-all duration-500 ${theme === "light" ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"}`} />
           <Moon className={`w-5 h-5 absolute transition-all duration-500 ${theme === "dark" ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-90 scale-50"}`} />
