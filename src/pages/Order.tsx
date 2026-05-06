@@ -258,10 +258,14 @@ const Order = () => {
                   <span className="font-serif text-primary text-sm">{section.jp}</span>
                 </div>
                 <ul className="grid sm:grid-cols-2 gap-4">
-                  {section.items.map((item) => (
-                    <li key={item.name} className="border border-border bg-card p-4 flex flex-col">
+                  {section.items.map((item, idx) => (
+                    <li
+                      key={item.name}
+                      style={{ animationDelay: `${idx * 40}ms` }}
+                      className="border border-border bg-card p-4 flex flex-col hover-lift shimmer-border animate-fade-up group"
+                    >
                       <div className="flex items-baseline justify-between gap-3">
-                        <h4 className="font-medium">{item.name}</h4>
+                        <h4 className="font-medium group-hover:text-primary transition-colors">{item.name}</h4>
                         <span className="font-serif text-accent">{item.price}</span>
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">{item.desc}</p>
@@ -287,9 +291,9 @@ const Order = () => {
                       <Button
                         size="sm"
                         onClick={() => addToCart(item)}
-                        className="mt-4 self-start rounded-none bg-primary hover:bg-primary/90"
+                        className="mt-4 self-start rounded-none bg-primary hover:bg-primary/90 btn-press hover:shadow-[var(--shadow-glow)] transition-all"
                       >
-                        <Plus className="w-3.5 h-3.5" /> Add to cart
+                        <Plus className="w-3.5 h-3.5 transition-transform group-hover:rotate-90" /> Add to cart
                       </Button>
                     </li>
                   ))}
